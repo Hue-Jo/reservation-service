@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: reservation
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/reservation?serverTimezone=UTC&characterEncoding=UTF-8
+    username: hj
+    password: zerobase
+
+  jpa:
+    show-sql: true
+    database: mysql
