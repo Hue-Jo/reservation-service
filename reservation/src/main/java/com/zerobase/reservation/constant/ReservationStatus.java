@@ -11,7 +11,7 @@ public enum ReservationStatus {
     CANCELED("예약 취소"),
 
     APPROVED("예약 승인"),
-    DENIED("예약 거절"),
+    DENIED("예약 거절 (마감시간 이전으로 다시 예약해주세요)"),
 
     COMPLETED("방문(이용) 완료");
 

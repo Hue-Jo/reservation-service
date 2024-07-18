@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,6 +21,13 @@ public class Store {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
+
+    private String name;
+    private String location;
+    private String phoneNum;
+
+    private LocalDateTime openTime;
+    private LocalDateTime closeTime;
 
 
 }
