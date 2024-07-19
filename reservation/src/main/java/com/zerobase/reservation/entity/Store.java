@@ -22,7 +22,7 @@ public class Store {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
 
-    private String name;
+    private String storeName;
     private String location;
     private String phoneNum;
 

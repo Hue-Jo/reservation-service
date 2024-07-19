@@ -22,7 +22,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationId;
 
-    private Long storeId;
+    private String storeName;
     private String email;
     private String userName;
 

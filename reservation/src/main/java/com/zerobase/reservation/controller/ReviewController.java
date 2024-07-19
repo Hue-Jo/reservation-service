@@ -1,10 +1,15 @@
 package com.zerobase.reservation.controller;
 
+import com.zerobase.reservation.service.ReviewService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/review")
+@RequiredArgsConstructor
 public class ReviewController {
+
+    private final ReviewService reviewService;
 
     /**
      * 리뷰 작성 (실고객 only)

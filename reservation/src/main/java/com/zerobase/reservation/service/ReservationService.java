@@ -1,4 +1,4 @@
 package com.zerobase.reservation.service;
 
-public interface ReservationSerivce {
+public interface ReservationService {
 }
