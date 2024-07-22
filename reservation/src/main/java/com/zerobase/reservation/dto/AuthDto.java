@@ -18,6 +18,7 @@ public class AuthDto {
     @AllArgsConstructor
     @Builder
     public static class CreateAccount {
+
         @Email(message = "이메일 형식에 맞게 입력해주세요")
         @NotBlank(message = "이메일은 필수 입력항목입니다.")
         private String email;
@@ -42,7 +43,38 @@ public class AuthDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
+    public static class UpdateAccount {
+
+        @Email(message = "이메일 형식에 맞게 입력해주세요")
+        @NotBlank(message = "이메일은 필수 입력항목입니다.")
+        private String email;
+
+        @Size(min = 8, message = "8자리 이상 입력하십시오")
+        private String newPassword;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class DeleteAccount {
+
+        @Email(message = "이메일 형식에 맞게 입력해주세요")
+        @NotBlank(message = "이메일을 입력하십시오.")
+        private String email;
+
+        @NotBlank(message = "비밀번호를 입력하십시오")
+        private String password;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class LogIn {
+
         @Email(message = "이메일 형식에 맞게 입력해주세요")
         @NotBlank(message = "이메일은 필수 입력항목입니다.")
         private String email;

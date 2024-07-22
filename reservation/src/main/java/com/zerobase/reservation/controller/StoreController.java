@@ -1,5 +1,7 @@
 package com.zerobase.reservation.controller;
 
+import com.zerobase.reservation.service.StoreService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,7 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/store")
+@RequiredArgsConstructor
 public class StoreController {
+
+    private final StoreService storeService;
 
     /**
      * (매니저) 매장등록
