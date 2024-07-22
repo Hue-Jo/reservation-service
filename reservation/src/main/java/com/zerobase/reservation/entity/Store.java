@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -26,8 +26,8 @@ public class Store {
     private String location;
     private String phoneNum;
 
-    private LocalDateTime openTime;
-    private LocalDateTime closeTime;
+    private LocalTime openTime;
+    private LocalTime closeTime;
 
 
 }

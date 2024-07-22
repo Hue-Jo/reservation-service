@@ -1,6 +1,7 @@
 package com.zerobase.reservation.service;
 
 import com.zerobase.reservation.dto.AuthDto;
+import com.zerobase.reservation.entity.User;
 
 public interface AuthService {
 
@@ -11,7 +12,7 @@ public interface AuthService {
 
     void deleteAccount(AuthDto.DeleteAccount request);
 
-    String logIn(AuthDto.LogIn request);
+    User logIn(AuthDto.LogIn request);
 
 
 }

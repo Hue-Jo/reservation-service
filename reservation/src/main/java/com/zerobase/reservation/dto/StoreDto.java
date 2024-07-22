@@ -1,5 +1,6 @@
 package com.zerobase.reservation.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -24,8 +26,10 @@ public class StoreDto {
     private String storePhoneNum;  // 가게 전화번호
 
     @NotBlank(message = "오픈시간을 작성해주세요")
-    private LocalDateTime storeOpenTime;  // 오픈시간
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime storeOpenTime;  // 오픈시간
 
     @NotBlank(message = "마감시간을 작성해주세요")
-    private LocalDateTime storeCloseTime; // 마감시간
+    @JsonFormat(pattern = "HH:mm")
+    private LocalTime storeCloseTime; // 마감시간
 }

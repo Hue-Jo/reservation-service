@@ -9,15 +9,15 @@ import com.zerobase.reservation.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/authority")
 @RequiredArgsConstructor
+@Validated
 public class AuthController {
 
     private final AuthService authService;
@@ -49,7 +49,7 @@ public class AuthController {
     @DeleteMapping("/delete-account")
     public ResponseEntity<String> deleteAccount(@RequestBody @Valid AuthDto.DeleteAccount request) {
         authService.deleteAccount(request);
-        return ResponseEntity.status(HttpStatus.OK).body("계정이 성공적으로 삭제되었습니다.");
+        return ResponseEntity.ok("계정이 성공적으로 삭제되었습니다.");
     }
 
 
@@ -58,15 +58,11 @@ public class AuthController {
      */
     @PostMapping("/log-in")
     public ResponseEntity<?> logIn(@RequestBody @Valid AuthDto.LogIn request) {
-        try {
-            String token = authService.logIn(request);
-            ResponseMessage responseMessage = ResponseMessage.success("로그인되었습니다.");
-            responseMessage.setBody(token);
-            return ResponseEntity.ok(responseMessage);
-        } catch (UserNotFoundException | InvalidPasswordException exception) {
-            ResponseMessage responseMessage = ResponseMessage.fail(exception.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMessage);
-        }
+
+        var user = authService.logIn(request);
+
+        var token = jwtTokenProvider.generateToken(user.getEmail());
+        return ResponseEntity.ok("로그인 되었습니다");
     }
 
 

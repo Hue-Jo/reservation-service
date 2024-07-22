@@ -11,6 +11,7 @@ import com.zerobase.reservation.repository.UserRepository;
 import com.zerobase.reservation.security.JwtTokenProvider;
 import com.zerobase.reservation.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
-    public String logIn(AuthDto.LogIn request) {
+    public User logIn(AuthDto.LogIn request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
@@ -100,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
 
-        return jwtTokenProvider.generateToken(user.getEmail());
+        return user;
     }
 
 
