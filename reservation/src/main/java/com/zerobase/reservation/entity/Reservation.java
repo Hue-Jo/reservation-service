@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -26,5 +26,5 @@ public class Reservation {
     private String email;
     private String userName;
 
-    private LocalDateTime reservationDt;
+    private LocalTime reservationDt;
 }
