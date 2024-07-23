@@ -1,14 +1,17 @@
 package com.zerobase.reservation.service;
 
 import com.zerobase.reservation.dto.ReservationDto;
+import org.springframework.http.ResponseEntity;
+
+import java.util.Optional;
 
 public interface ReservationService {
 
-    void requestReservation(ReservationDto reservationDto);
+    Long requestReservation(ReservationDto reservationDto);
 
-    ReservationDto confirmReservation(Long reservationId);
+    Optional<ReservationDto> confirmReservation(Long reservationId);
 
-    void updateReservation(Long reservationId, ReservationDto reservationDto);
+    ResponseEntity<String> updateReservation(Long reservationId, ReservationDto reservationDto);
 
-    void cancelReservation(Long reservationId);
+    ResponseEntity<String> cancelReservation(Long reservationId);
 }

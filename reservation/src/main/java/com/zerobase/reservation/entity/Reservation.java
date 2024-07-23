@@ -25,7 +25,7 @@ public class Reservation {
     private Long reservationId;
 
     private String storeName;
-    private String email;
+    private String userEmail;
     private String userName;
 
     private LocalDateTime reservationDt;
