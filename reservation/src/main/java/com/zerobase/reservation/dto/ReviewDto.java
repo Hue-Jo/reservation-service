@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReviewDto {
 
+    private Long reviewId;
+
+    private String storeName;  // 매장명
     private String userName;   // 리뷰 작성자
     private String title;      // 제목
     private String content;    // 내용
