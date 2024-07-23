@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -24,6 +26,6 @@ public class ReservationDto {
     private String storeName;   // 가게명
 
     @NotBlank(message = "예약하고자 하는 날짜를 작성하십시오")
-    private LocalTime reservationDt;  // 예약 일자
+    private LocalDateTime reservationDt;  // 예약 일자
 
 }

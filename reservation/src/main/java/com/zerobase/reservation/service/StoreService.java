@@ -1,19 +1,17 @@
 package com.zerobase.reservation.service;
 
 import com.zerobase.reservation.dto.StoreDto;
-import com.zerobase.reservation.entity.Store;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StoreService {
 
     void enrollStore(StoreDto storeDto);
 
+    List<StoreDto> searchAllStores();
 
-    List<Store> searchAllStores();
+    List<String> searchStoreSortedByName();
 
-    StoreDto searchStoreDetailInfo(String storeName);
-
-    List<StoreDto> searchStoreSortedByName();
-
+    Optional<StoreDto> searchStoreDetailInfo(String storeName);
 }

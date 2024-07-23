@@ -1,11 +1,11 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.ReservationDto;
-import com.zerobase.reservation.entity.Reservation;
 import com.zerobase.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/reservation")
@@ -26,7 +26,7 @@ public class ReservationController {
     /**
      * 예약정보 확인
      */
-    @GetMapping("/cofirm/{id}")
+    @GetMapping("/confirm/{id}")
     public ReservationDto confirmReservation(@PathVariable Long id) {
         return reservationService.confirmReservation(id);
 
@@ -48,6 +48,23 @@ public class ReservationController {
     @DeleteMapping("/cancel/{id}")
     public void cancelReservation(@PathVariable Long id) {
         reservationService.cancelReservation(id);
+    }
+
+    /**
+     * 날짜별 예약정보 확인 (MANAGER ONLY)
+     */
+    @GetMapping("/check-schedule/{date}")
+    public void checkReservationSchedule(@PathVariable LocalDate date) {
+
+    }
+
+
+    /**
+     * 키오스크를 통한 방문확인 feat.예약 번호
+     */
+    @GetMapping("/kiosk/{id}")
+    public void kioskConfirm() {
+
     }
 
 
