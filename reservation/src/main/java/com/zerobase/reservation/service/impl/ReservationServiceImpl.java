@@ -87,7 +87,10 @@ public class ReservationServiceImpl implements ReservationService {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("존재하지 않는 예약번호입니다.");
         }
-
     }
+
+    /**
+     * 방문확인
+     */
 }
 

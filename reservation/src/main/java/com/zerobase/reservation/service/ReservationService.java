@@ -14,4 +14,6 @@ public interface ReservationService {
     ResponseEntity<String> updateReservation(Long reservationId, ReservationDto reservationDto);
 
     ResponseEntity<String> cancelReservation(Long reservationId);
+
+
 }
