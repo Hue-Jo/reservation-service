@@ -29,4 +29,8 @@ public class Reservation {
     private String userName;
 
     private LocalDateTime reservationDt;
+
+    private boolean visitYn;
+    private boolean delayYn;
+    private LocalDateTime newReservationDt;
 }

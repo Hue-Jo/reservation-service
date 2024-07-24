@@ -33,4 +33,10 @@ public class ReservationDto {
     @JsonFormat(pattern = "yyyy년 MM월 dd일, HH시 mm분")
     private LocalDateTime reservationDt;  // 예약 일자
 
+
+    @JsonFormat(pattern = "yyyy년 MM월 dd일, HH시 mm분")
+    private LocalDateTime newReservationDt;  // 연기된 예약 일자
+
+    private boolean delayed;  // 지각 여부
+
 }

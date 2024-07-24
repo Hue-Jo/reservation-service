@@ -61,6 +61,15 @@ public class ReservationController {
     }
 
 
+    /**
+     * 키오스크를 통한 방문확인 feat.예약 번호
+     */
+    @PostMapping("/visit/{reservationId}")
+    public ResponseEntity<String> visitConfirm(@PathVariable Long reservationId) {
+        String message = reservationService.confirmVisit(reservationId);
+        return ResponseEntity.ok(message);
+
+    }
 
     /**
      * 날짜별 예약정보 확인 (MANAGER ONLY)
@@ -69,15 +78,4 @@ public class ReservationController {
     public void checkReservationSchedule(@PathVariable LocalDate date) {
 
     }
-
-
-    /**
-     * 키오스크를 통한 방문확인 feat.예약 번호
-     */
-    @GetMapping("/kiosk/{id}")
-    public void kioskConfirm() {
-
-    }
-
-
 }
