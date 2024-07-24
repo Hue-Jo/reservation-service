@@ -3,30 +3,30 @@ package com.zerobase.reservation.service.impl;
 import com.zerobase.reservation.constant.UserRole;
 import com.zerobase.reservation.dto.AuthDto;
 import com.zerobase.reservation.entity.User;
-import com.zerobase.reservation.exception.EmailAlreadyExistException;
-import com.zerobase.reservation.exception.InvalidPasswordException;
-import com.zerobase.reservation.exception.InvalidRoleException;
-import com.zerobase.reservation.exception.UserNotFoundException;
+import com.zerobase.reservation.exception.error.EmailAlreadyExistException;
+import com.zerobase.reservation.exception.error.InvalidPasswordException;
+import com.zerobase.reservation.exception.error.UserNotFoundException;
 import com.zerobase.reservation.repository.UserRepository;
-import com.zerobase.reservation.security.JwtTokenProvider;
 import com.zerobase.reservation.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder passwordEncoder;
 
-
+    /**
+     * 회원가입
+     */
     @Override
     public AuthDto.CreateAccount creatAccount(@Valid AuthDto.CreateAccount request) {
 
@@ -34,19 +34,12 @@ public class AuthServiceImpl implements AuthService {
             throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
         }
 
-        UserRole userRole;
-        try {
-            userRole = UserRole.valueOf(request.getRole().toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new InvalidRoleException("이용자인 경우 USER, 사장님인 경우 MANAGER 선택");
-        }
-
         User user = User.builder()
                 .email(request.getEmail())
                 .userName(request.getUserName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNum(request.getPhoneNum())
-                .role(userRole)
+                .role(UserRole.valueOf(request.getRole()))
                 .build();
 
         userRepository.save(user);
@@ -54,6 +47,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+    /**
+     * 회원정보 수정
+     */
     @Override
     @Transactional
     public AuthDto.UpdateAccount updateAccount(String email, @Valid AuthDto.UpdateAccount request) {
@@ -76,6 +72,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
 
+    /**
+     * 계정 삭제
+     */
     @Override
     @Transactional
     public void deleteAccount(AuthDto.DeleteAccount request) {
@@ -89,20 +88,5 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.delete(user);
     }
-
-
-    @Override
-    public User logIn(AuthDto.LogIn request) {
-
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
-        }
-
-        return user;
-    }
-
 
 }

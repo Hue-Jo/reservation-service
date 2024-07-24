@@ -1,7 +1,7 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.ReviewDto;
-import com.zerobase.reservation.exception.ReviewNotExistException;
+import com.zerobase.reservation.exception.error.ReviewNotExistException;
 import com.zerobase.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

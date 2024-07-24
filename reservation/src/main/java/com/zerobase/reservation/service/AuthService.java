@@ -1,7 +1,7 @@
 package com.zerobase.reservation.service;
 
 import com.zerobase.reservation.dto.AuthDto;
-import com.zerobase.reservation.entity.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AuthService {
 
@@ -12,7 +12,6 @@ public interface AuthService {
 
     void deleteAccount(AuthDto.DeleteAccount request);
 
-    User logIn(AuthDto.LogIn request);
 
 
 }

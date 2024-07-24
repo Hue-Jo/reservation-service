@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 
@@ -34,7 +35,8 @@ public class AuthDto {
         @NotBlank(message = "비밀번호는 필수 입력항목입니다.")
         private String password;
 
-        @NotBlank(message = "관리자 / 이용자 여부")
+        @NotBlank(message = "이용자라면 USER, 사장님이라면 MANAGER를 선택해주세요.")
+        @Pattern(regexp = "USER|MANAGER", message = "이용자라면 USER, 사장님이라면 MANAGER를 선택해주세요.")
         private String role;
     }
 
@@ -82,6 +84,18 @@ public class AuthDto {
         @Size(min = 8, message = "8자리 이상 입력하십시오")
         @NotBlank(message = "비밀번호는 필수 입력항목입니다.")
         private String password;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class AuthResponseDto {
+
+        private String email;
+        private String userName;
+        private String role;
+        private String token;
     }
 
 }

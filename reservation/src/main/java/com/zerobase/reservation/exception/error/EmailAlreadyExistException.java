@@ -1,4 +1,4 @@
-package com.zerobase.reservation.exception;
+package com.zerobase.reservation.exception.error;
 
 public class EmailAlreadyExistException extends RuntimeException{
 

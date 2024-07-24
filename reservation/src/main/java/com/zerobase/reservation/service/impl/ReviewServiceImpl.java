@@ -2,14 +2,13 @@ package com.zerobase.reservation.service.impl;
 
 import com.zerobase.reservation.dto.ReviewDto;
 import com.zerobase.reservation.entity.Review;
-import com.zerobase.reservation.exception.ReviewNotExistException;
+import com.zerobase.reservation.exception.error.ReviewNotExistException;
 import com.zerobase.reservation.repository.ReviewRepository;
 import com.zerobase.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

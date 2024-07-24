@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class ReservationDto {
     private String storeName;   // 가게명
 
     @NotBlank(message = "이메일은 필수 작성항목입니다.")
+    @Email(message = "이메일 형식에 맞게 입력해주세요")
     private String userEmail;   // 이메일(아이디)
 
     @NotBlank(message = "예약자명은 필수 작성항목입니다.")

@@ -1,13 +1,9 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.AuthDto;
-import com.zerobase.reservation.exception.InvalidPasswordException;
-import com.zerobase.reservation.exception.UserNotFoundException;
-import com.zerobase.reservation.response.ResponseMessage;
-import com.zerobase.reservation.security.JwtTokenProvider;
+import com.zerobase.reservation.exception.error.EmailAlreadyExistException;
 import com.zerobase.reservation.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +17,18 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtTokenProvider jwtTokenProvider;
 
     /**
      * 회원가입
      */
     @PostMapping("/create-account")
     public ResponseEntity<?> createAccount(@RequestBody @Valid AuthDto.CreateAccount request) {
-        authService.creatAccount(request);
-        return ResponseEntity.ok("회원가입을 축하합니다!");
+        try {
+            authService.creatAccount(request);
+            return ResponseEntity.ok("회원가입을 축하합니다!");
+        } catch (EmailAlreadyExistException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 
@@ -56,14 +55,6 @@ public class AuthController {
     /**
      * 로그인
      */
-    @PostMapping("/log-in")
-    public ResponseEntity<?> logIn(@RequestBody @Valid AuthDto.LogIn request) {
-
-        var user = authService.logIn(request);
-
-        var token = jwtTokenProvider.generateToken(user.getEmail());
-        return ResponseEntity.ok("로그인 되었습니다");
-    }
 
 
     /**
