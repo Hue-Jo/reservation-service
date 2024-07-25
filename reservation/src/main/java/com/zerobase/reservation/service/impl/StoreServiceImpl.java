@@ -1,11 +1,17 @@
 package com.zerobase.reservation.service.impl;
 
+import com.zerobase.reservation.constant.UserRole;
 import com.zerobase.reservation.dto.StoreDto;
 import com.zerobase.reservation.entity.Store;
+import com.zerobase.reservation.entity.User;
+import com.zerobase.reservation.exception.error.UserNotFoundException;
 import com.zerobase.reservation.repository.StoreRepository;
+import com.zerobase.reservation.repository.UserRepository;
 import com.zerobase.reservation.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +23,7 @@ import java.util.stream.Collectors;
 public class StoreServiceImpl implements StoreService {
 
     private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
 
 
     /**
@@ -24,6 +31,15 @@ public class StoreServiceImpl implements StoreService {
      */
     @Override
     public void enrollStore(StoreDto storeDto) {
+
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
+
+        if (currentUser.getRole() != UserRole.MANAGER) {
+            throw new AccessDeniedException("매장 관리자만 매장을 등록할 수 있습니다.");
+        }
+
         Store store = Store.builder()
                 .storeName(storeDto.getStoreName())
                 .location(storeDto.getStoreLocation())

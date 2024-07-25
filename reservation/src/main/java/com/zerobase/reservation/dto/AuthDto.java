@@ -71,31 +71,4 @@ public class AuthDto {
     }
 
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class LogIn {
-
-        @Email(message = "이메일 형식에 맞게 입력해주세요")
-        @NotBlank(message = "이메일은 필수 입력항목입니다.")
-        private String email;
-
-        @Size(min = 8, message = "8자리 이상 입력하십시오")
-        @NotBlank(message = "비밀번호는 필수 입력항목입니다.")
-        private String password;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class AuthResponseDto {
-
-        private String email;
-        private String userName;
-        private String role;
-        private String token;
-    }
-
 }

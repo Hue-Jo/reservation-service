@@ -37,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().sameOrigin();
 
         http.authorizeRequests()
-                .antMatchers("/reservation/**").hasRole("USER")
+                .antMatchers("/store/enroll").hasRole("MANAGER") // 매장등록은 MANAGER만
+                .antMatchers("/reservation/**").hasRole("USER")  // 예약관련은 USER만
                 .anyRequest().permitAll()
                 .and()
                 .formLogin().permitAll()

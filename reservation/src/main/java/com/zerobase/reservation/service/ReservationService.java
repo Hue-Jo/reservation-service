@@ -8,13 +8,13 @@ import java.util.Optional;
 public interface ReservationService {
 
     // 예약신청
-    Long requestReservation(ReservationDto reservationDto);
+    Long requestReservation(ReservationDto.Request reservationDto);
 
     //예약정보 확인
-    Optional<ReservationDto> confirmReservation(Long reservationId);
+    Optional<ReservationDto.Request> confirmReservation(Long reservationId);
 
     // 예약정보 수정
-    ResponseEntity<String> updateReservation(Long reservationId, ReservationDto reservationDto);
+    ResponseEntity<String> updateReservation(Long reservationId, ReservationDto.UpdateDt updateDt);
 
     // 예약취소
     ResponseEntity<String> cancelReservation(Long reservationId);

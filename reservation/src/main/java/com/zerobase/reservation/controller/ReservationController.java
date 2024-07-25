@@ -19,10 +19,10 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     /**
-     * 예약신청
+     * 예약신청 _ 예약번호 반환
      */
     @PostMapping("/request")
-    public ResponseEntity<?> requestReservation(@RequestBody @Valid ReservationDto reservationDto) {
+    public ResponseEntity<?> requestReservation(@RequestBody @Valid ReservationDto.Request reservationDto) {
         Long reservationId = reservationService.requestReservation(reservationDto);
         String message = String.format("예약이 완료되었습니다. 예약번호는 %d입니다." +
                 " 승인이 완료되면 입력해주신 이메일로 확인메일을 보내드립니다.", reservationId);
@@ -32,28 +32,28 @@ public class ReservationController {
 
 
     /**
-     * 예약정보 확인
+     * 예약정보 확인 (예약번호 입력시)
      */
     @GetMapping("/confirm/{reservationId}")
     public ResponseEntity<?> confirmReservation(@PathVariable Long reservationId) {
-        Optional<ReservationDto> reservationInfo = reservationService.confirmReservation(reservationId);
+        Optional<ReservationDto.Request> reservationInfo = reservationService.confirmReservation(reservationId);
         return reservationInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
 
     /**
-     * 예약정보 수정
+     * 예약시간 수정 (예약번호 입력시)
      */
-    @PatchMapping("/update/{id}")
+    @PatchMapping("/update/{reservationId}")
     public ResponseEntity<String> updateReservation(@PathVariable Long reservationId,
-                                                    @RequestBody ReservationDto reservationDto) {
-        return reservationService.updateReservation(reservationId, reservationDto);
+                                                    @RequestBody ReservationDto.UpdateDt updateDt) {
+        return reservationService.updateReservation(reservationId, updateDt);
     }
 
 
     /**
-     * 예약취소
+     * 예약취소 (예약번호 입력시)
      */
     @DeleteMapping("/cancel/{reservationId}")
     public ResponseEntity<String> cancelReservation(@PathVariable Long reservationId) {
@@ -62,7 +62,9 @@ public class ReservationController {
 
 
     /**
-     * 키오스크를 통한 방문확인 feat.예약 번호
+     * 방문확인
+     * 10분 이상 지각시, 30분 후 이용가능
+     * 미뤄진 예약 시간에 이미 예약자가 있는 경우, 예약을 새롭게 해야한다는 메시지 반환
      */
     @PostMapping("/visit/{reservationId}")
     public ResponseEntity<String> visitConfirm(@PathVariable Long reservationId) {

@@ -1,9 +1,6 @@
 package com.zerobase.reservation.exception;
 
-import com.zerobase.reservation.exception.error.EmailAlreadyExistException;
-import com.zerobase.reservation.exception.error.InvalidPasswordException;
-import com.zerobase.reservation.exception.error.InvalidRoleException;
-import com.zerobase.reservation.exception.error.UserNotFoundException;
+import com.zerobase.reservation.exception.error.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -25,6 +22,7 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
+        System.out.println("Validation errors: " + errors);
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
@@ -41,5 +39,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<String> handleInvalidPasswordException(InvalidPasswordException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(StoreNotExistException.class)
+    public ResponseEntity<String> handleStoreNotFoundException(StoreNotExistException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }

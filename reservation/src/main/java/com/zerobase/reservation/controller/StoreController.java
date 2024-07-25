@@ -66,10 +66,4 @@ public class StoreController {
         }
     }
 
-
-    @ExceptionHandler(StoreNotExistException.class)
-    public ResponseEntity<String> handleStoreNotFoundException(StoreNotExistException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
 }

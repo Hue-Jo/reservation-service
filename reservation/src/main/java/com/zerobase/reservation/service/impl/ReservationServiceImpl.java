@@ -2,12 +2,19 @@ package com.zerobase.reservation.service.impl;
 
 import com.zerobase.reservation.dto.ReservationDto;
 import com.zerobase.reservation.entity.Reservation;
+import com.zerobase.reservation.entity.Store;
+import com.zerobase.reservation.entity.User;
+import com.zerobase.reservation.exception.error.StoreNotExistException;
+import com.zerobase.reservation.exception.error.UserNotFoundException;
 import com.zerobase.reservation.repository.ReservationRepository;
+import com.zerobase.reservation.repository.StoreRepository;
+import com.zerobase.reservation.repository.UserRepository;
 import com.zerobase.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,15 +22,28 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReservationServiceImpl implements ReservationService {
 
     private final ReservationRepository reservationRepository;
+    private final UserRepository userRepository;
+    private final StoreRepository storeRepository;
 
     /**
      * 예약신청
      */
     @Override
-    public Long requestReservation(ReservationDto reservationDto) {
+    public Long requestReservation(ReservationDto.Request reservationDto) {
+
+        Optional<User> user = userRepository.findByEmail(reservationDto.getUserEmail());
+        if(user.isEmpty()) {
+            throw new UserNotFoundException("존재하지 않는 회원입니다.");
+        }
+        Optional<Store> store = storeRepository.findByStoreName(reservationDto.getStoreName());
+        if(store.isEmpty()) {
+            throw new StoreNotExistException("존재하지 않는 상호명입니다");
+        }
+
         Reservation reservation = Reservation.builder()
                 .userEmail(reservationDto.getUserEmail())
                 .userName(reservationDto.getUserName())
@@ -40,10 +60,9 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약정보 확인 (예약번호 입력)
      */
     @Override
-    public Optional<ReservationDto> confirmReservation(Long reservationId) {
+    public Optional<ReservationDto.Request> confirmReservation(Long reservationId) {
         return reservationRepository.findByReservationId(reservationId)
-                .map(reservation -> ReservationDto.builder()
-                        .reservationId(reservation.getReservationId())
+                .map(reservation -> ReservationDto.Request.builder()
                         .userEmail(reservation.getUserEmail())
                         .userName(reservation.getUserName())
                         .storeName(reservation.getStoreName())
@@ -57,13 +76,13 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약정보 수정 (예약번호 입력)
      */
     @Override
-    public ResponseEntity<String> updateReservation(Long reservationId, ReservationDto reservationDto) {
+    public ResponseEntity<String> updateReservation(Long reservationId, ReservationDto.UpdateDt updateDt) {
 
         Optional<Reservation> reservation = reservationRepository.findByReservationId(reservationId);
 
         if (reservation.isPresent()) {
             Reservation currnetReservation = reservation.get();
-            LocalDateTime newDateTime = reservationDto.getReservationDt();
+            LocalDateTime newDateTime = updateDt.getUpdatedDt();
 
             currnetReservation.setReservationDt(newDateTime);
             reservationRepository.save(currnetReservation);
@@ -107,7 +126,7 @@ public class ReservationServiceImpl implements ReservationService {
             LocalDateTime reservationDt = reservation.getReservationDt();
 
             if (now.isAfter(reservationDt.plusMinutes(10))) { // 10분 지각시,
-                LocalDateTime newReservationDt = reservationDt.plusMinutes(20); // 20분 뒤로 연기
+                LocalDateTime newReservationDt = reservationDt.plusMinutes(30); // 30분 뒤로 연기
 
                 // 미룬 시간에 다른 예약이 있는지 확인
                 List<Reservation> existingReservation = reservationRepository.findByReservationDt(newReservationDt);
