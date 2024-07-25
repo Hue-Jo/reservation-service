@@ -71,4 +71,22 @@ public class AuthDto {
     }
 
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class LoginRequest {
+        private String email;
+        private String password;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class LoginResponse {
+        private String token;
+    }
+
+
 }
