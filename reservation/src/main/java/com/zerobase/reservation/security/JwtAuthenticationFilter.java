@@ -1,10 +1,11 @@
 package com.zerobase.reservation.security;
 
-import com.zerobase.reservation.service.impl.UserDetailServiceImpl;
+import com.zerobase.reservation.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,35 +20,39 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserDetailsServiceImpl userDetailsService;
+
 
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
-    private final UserDetailServiceImpl userDetailServiceImpl;
+
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authorizationHeader = request.getHeader(TOKEN_HEADER);
 
-        String header = request.getHeader(TOKEN_HEADER);
+        String email = null;
+        String jwt = null;
 
-        if(header != null && header.startsWith(TOKEN_PREFIX)) {
-            String token = header.substring(7);
+        if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
+            jwt = authorizationHeader.substring(TOKEN_PREFIX.length());
+            try {
+                email = jwtUtil.extractEmail(jwt);
+            } catch (Exception e) {
+                logger.error("JWT token parsing error: " + e.getMessage());
+            }
+        }
 
-            if (!jwtUtil.isTokenExpired(token)) {
-                String email = jwtUtil.extractUsername(token);
-                UserDetails userDetails = userDetailServiceImpl.loadUserByUsername(email);
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-
+            if (jwtUtil.isTokenValid(jwt, userDetails.getUsername())) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
             }
         }
         filterChain.doFilter(request, response);
-
     }
 }

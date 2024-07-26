@@ -2,11 +2,9 @@ package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.AuthDto;
 import com.zerobase.reservation.exception.error.EmailAlreadyExistException;
-import com.zerobase.reservation.security.JwtUtil;
 import com.zerobase.reservation.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +17,6 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
 
     /**
      * 회원가입
@@ -60,7 +56,10 @@ public class AuthController {
      * 로그인
      */
     @PostMapping("/login")
-    public ResponseEntity<>
+    public ResponseEntity<AuthDto.LoginResponse> login(@RequestBody AuthDto.LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
+    }
+
 
     /**
      * 로그아웃
