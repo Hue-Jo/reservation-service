@@ -1,22 +1,11 @@
 package com.zerobase.reservation.security;
 
-import com.zerobase.reservation.entity.User;
-import com.zerobase.reservation.repository.UserRepository;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -25,18 +14,18 @@ public class JwtUtil {
 
     private final JwtProperties jwtProperties;
 
-
     /**
      * JWT 토큰 생성
      */
     public String generateToken(String email) {
 
+        byte[] keyBytes = Base64.getDecoder().decode(jwtProperties.getSecret());
 
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtProperties.getExpiration()))
-                .signWith(SignatureAlgorithm.HS512, jwtProperties.getSecret())
+                .signWith(SignatureAlgorithm.HS512, keyBytes)
                 .compact();
     }
 
@@ -44,8 +33,12 @@ public class JwtUtil {
      * JWT 토큰에서 이메일을 추출
      */
     public String extractEmail(String token) {
+
+        byte[] keyBytes = Base64.getDecoder().decode(jwtProperties.getSecret());
+
+
         return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
+                .setSigningKey(keyBytes)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -58,8 +51,11 @@ public class JwtUtil {
     }
 
     private boolean isTokenExpired(String token) {
+
+        byte[] keyBytes = Base64.getDecoder().decode(jwtProperties.getSecret());
+
         return Jwts.parser()
-                .setSigningKey(jwtProperties.getSecret())
+                .setSigningKey(keyBytes)
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration()

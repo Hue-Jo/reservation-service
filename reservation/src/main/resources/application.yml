@@ -23,5 +23,5 @@ spring:
 
   security:
     jwt:
-      secret: myNewSecretKey1234567890
+      secret: bXlOZXdTZWNyZXRLZXkxMjM0NTY3ODkw
       expiration: 3600000
