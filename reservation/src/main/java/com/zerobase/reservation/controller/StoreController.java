@@ -1,10 +1,8 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.StoreDto;
-import com.zerobase.reservation.exception.error.StoreNotExistException;
 import com.zerobase.reservation.service.StoreService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

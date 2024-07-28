@@ -22,7 +22,7 @@ public class AuthDto {
 
         @Email(message = "이메일 형식에 맞게 입력해주세요")
         @NotBlank(message = "이메일은 필수 입력항목입니다.")
-        private String email;
+        private String userEmail;
 
         @NotBlank(message = "이름은 필수 입력항목입니다.")
         private String userName;
@@ -49,7 +49,7 @@ public class AuthDto {
 
         @Email(message = "이메일 형식에 맞게 입력해주세요")
         @NotBlank(message = "이메일은 필수 입력항목입니다.")
-        private String email;
+        private String userEmail;
 
         @Size(min = 8, message = "8자리 이상 입력하십시오")
         private String newPassword;
@@ -64,7 +64,7 @@ public class AuthDto {
 
         @Email(message = "이메일 형식에 맞게 입력해주세요")
         @NotBlank(message = "이메일을 입력하십시오.")
-        private String email;
+        private String userEmail;
 
         @NotBlank(message = "비밀번호를 입력하십시오")
         private String password;
@@ -76,7 +76,7 @@ public class AuthDto {
     @AllArgsConstructor
     @Builder
     public static class LoginRequest {
-        private String email;
+        private String UserEmail;
         private String password;
     }
 
@@ -86,6 +86,7 @@ public class AuthDto {
     @Builder
     public static class LoginResponse {
         private String token;
+        private String message;
     }
 
 

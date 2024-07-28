@@ -29,12 +29,16 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthDto.CreateAccount creatAccount(@Valid AuthDto.CreateAccount request) {
 
-        if (userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getUserEmail())) {
             throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
         }
 
+        if (request.getPassword() == null || request.getPassword().length() < 8) {
+            throw new InvalidPasswordException("8자리 이상의 유효한 비밀번호를 입력하세요");
+        }
+
         User user = User.builder()
-                .email(request.getEmail())
+                .email(request.getUserEmail())
                 .userName(request.getUserName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .phoneNum(request.getPhoneNum())
@@ -78,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void deleteAccount(AuthDto.DeleteAccount request) {
 
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getUserEmail())
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -95,16 +99,22 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthDto.LoginResponse login(AuthDto.LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getUserEmail())
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
-        return new AuthDto.LoginResponse(token);
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        return AuthDto.LoginResponse.builder()
+                .token(token).message("로그인 되었습니다.")
+                .build();
     }
 
+
+    /**
+     * 로그아웃
+     */
 
 }

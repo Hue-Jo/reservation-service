@@ -1,7 +1,9 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.ReviewDto;
+import com.zerobase.reservation.exception.error.InvalidRoleException;
 import com.zerobase.reservation.exception.error.ReviewNotExistException;
+import com.zerobase.reservation.exception.error.UserNotFoundException;
 import com.zerobase.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,13 +45,16 @@ public class ReviewController {
      * 리뷰 수정 (실고객 only)
      */
     @PatchMapping("/edit")
-    public ResponseEntity<ReviewDto> updateReview(@RequestBody ReviewDto reviewDto) {
+    public ResponseEntity<ReviewDto> updateReview(@RequestBody ReviewDto reviewDto,
+                                                  @RequestHeader("user-email") String userEmail) {
 
         try {
-            ReviewDto updateReviewDto = reviewService.updateReview(reviewDto);
+            ReviewDto updateReviewDto = reviewService.updateReview(reviewDto, userEmail);
             return new ResponseEntity<>(updateReviewDto, HttpStatus.OK);
         } catch (ReviewNotExistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
 
@@ -58,13 +63,15 @@ public class ReviewController {
      * 리뷰 삭제 (실고객 & 매니저 only)
      */
     @DeleteMapping("/delete/{reviewId}")
-    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId) {
+    public ResponseEntity<String> deleteReview(@PathVariable Long reviewId, @RequestHeader("user-email") String userEmail) {
 
         try {
-            reviewService.deleteReview(reviewId);
+            reviewService.deleteReview(reviewId, userEmail);
             return ResponseEntity.ok("리뷰가 삭제되었습니다.");
         } catch (ReviewNotExistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 리뷰가 존재하지 않아 삭제에 실패했습니다.");
+        } catch (InvalidRoleException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자와 관리자만 삭제가 가능합니다.");
         }
     }
 

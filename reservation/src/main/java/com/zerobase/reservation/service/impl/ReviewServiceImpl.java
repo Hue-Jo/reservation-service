@@ -1,9 +1,19 @@
 package com.zerobase.reservation.service.impl;
 
+import com.zerobase.reservation.constant.UserRole;
 import com.zerobase.reservation.dto.ReviewDto;
+import com.zerobase.reservation.entity.Reservation;
 import com.zerobase.reservation.entity.Review;
+import com.zerobase.reservation.entity.Store;
+import com.zerobase.reservation.entity.User;
+import com.zerobase.reservation.exception.ReservationNotFoundException;
+import com.zerobase.reservation.exception.error.InvalidRoleException;
 import com.zerobase.reservation.exception.error.ReviewNotExistException;
+import com.zerobase.reservation.exception.error.UserNotFoundException;
+import com.zerobase.reservation.repository.ReservationRepository;
 import com.zerobase.reservation.repository.ReviewRepository;
+import com.zerobase.reservation.repository.UserRepository;
+import com.zerobase.reservation.service.ReservationService;
 import com.zerobase.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +26,9 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
-
+    private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
+    private final ReservationService reservationService;
 
     /**
      * 리뷰 작성 (실이용자 ONLY)
@@ -24,18 +36,29 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto writeReview(ReviewDto reviewDto) {
 
+        Reservation reservation = reservationRepository.findById(reviewDto.getReservationId())
+                .orElseThrow(() -> new ReservationNotFoundException("해당 예약이 존재하지 않습니다."));
+
+        if (!reservation.isVisitYn()) {
+            throw new IllegalStateException("매장을 실제로 방문/이용한 이용자만 리뷰를 작성할 수 있습니다.");
+        }
+
+        Store store = reservation.getStore();
+        User user = reservation.getUser();
+
         Review review = Review.builder()
-                .storeName(reviewDto.getStoreName())
-                .userName(reviewDto.getUserName())
+                .store(store)
+                .user(user)
                 .title(reviewDto.getTitle())
                 .content(reviewDto.getContent())
                 .rating(reviewDto.getRating())
                 .build();
-
         review = reviewRepository.save(review);
+
         return ReviewDto.builder()
-                .storeName(review.getStoreName())
-                .userName(review.getUserName())
+                .reviewId((review.getReviewId()))
+                .storeName(store.getStoreName())
+                .userName(user.getUserName())
                 .title(review.getTitle())
                 .content(review.getContent())
                 .rating(review.getRating())
@@ -51,7 +74,9 @@ public class ReviewServiceImpl implements ReviewService {
         List<Review> reviews = reviewRepository.findByStoreName(storeName);
         return reviews.stream()
                 .map(review -> ReviewDto.builder()
-                        .userName(review.getUserName())
+                        .reviewId(review.getReviewId())
+                        .storeName(review.getStore().getStoreName())
+                        .userName(review.getUser().getUserName())
                         .title(review.getTitle())
                         .content(review.getContent())
                         .rating(review.getRating())
@@ -65,9 +90,18 @@ public class ReviewServiceImpl implements ReviewService {
      * 제목, 내용, 별점만 수정 가능
      */
     @Override
-    public ReviewDto updateReview(ReviewDto reviewDto) {
+    public ReviewDto updateReview(ReviewDto reviewDto, String userEmail) {
+
         Review review = reviewRepository.findById(reviewDto.getReviewId())
                 .orElseThrow(() -> new ReviewNotExistException("해당 리뷰가 존재하지 않습니다."));
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+
+        // 본인 확인
+        if (!review.getUser().equals(user)) {
+            throw new UserNotFoundException("리뷰 수정은 게시자 본인만 가능합니다.");
+        }
 
         review.setTitle(reviewDto.getTitle());
         review.setContent(reviewDto.getContent());
@@ -77,8 +111,8 @@ public class ReviewServiceImpl implements ReviewService {
 
         return ReviewDto.builder()
                 .reviewId(updateReview.getReviewId())
-                .storeName(updateReview.getStoreName())
-                .userName(updateReview.getUserName())
+                .storeName(updateReview.getStore().getStoreName())
+                .userName(updateReview.getUser().getUserName())
                 .title(updateReview.getTitle())
                 .content(updateReview.getContent())
                 .rating(updateReview.getRating())
@@ -90,12 +124,22 @@ public class ReviewServiceImpl implements ReviewService {
      * 리뷰삭제 (실이용자 & MANAGER ONLY)
      */
     @Override
-    public void deleteReview(Long reviewId) {
-        if(reviewRepository.existsById(reviewId)) {
-            reviewRepository.deleteById(reviewId);
-        } else {
-            throw new ReviewNotExistException("해당 리뷰가 존재하지 않습니다.");
+    public void deleteReview(Long reviewId, String userEmail) {
+
+        // 리뷰가 존재하는지 확인
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ReviewNotExistException("해당 리뷰가 존재하지 않습니다."));
+
+        // 현재 사용자의 권한 확인
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+        // 현재 사용자의 역할 확인
+        if (user.getRole() != UserRole.MANAGER && !review.getUser().equals(userEmail)) {
+            throw new InvalidRoleException("리뷰를 삭제할 권한이 없습니다.");
         }
+
+        // 리뷰 삭제
+        reviewRepository.deleteById(reviewId);
     }
 
 

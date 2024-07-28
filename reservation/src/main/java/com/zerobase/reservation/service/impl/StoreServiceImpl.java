@@ -9,8 +9,10 @@ import com.zerobase.reservation.repository.StoreRepository;
 import com.zerobase.reservation.repository.UserRepository;
 import com.zerobase.reservation.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
@@ -32,9 +35,13 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void enrollStore(StoreDto storeDto) {
 
-        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserEmail = authentication.getName();
         User currentUser = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
+
+
+        log.info("Current User Role: {}", currentUser.getRole()); // 현재 사용자 역할 로그
 
         if (currentUser.getRole() != UserRole.MANAGER) {
             throw new AccessDeniedException("매장 관리자만 매장을 등록할 수 있습니다.");

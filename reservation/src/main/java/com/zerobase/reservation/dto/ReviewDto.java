@@ -34,4 +34,6 @@ public class ReviewDto {
     @Min(value = 1, message = "별점은 1점부터 줄 수 있습니다.")
     @Max(value = 5, message = "별점은 5점까지만 줄 수 있습니다.")
     private int rating;        // 별점 (1-5)
+
+    private Long reservationId;
 }

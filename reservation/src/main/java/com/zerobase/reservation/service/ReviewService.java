@@ -10,8 +10,8 @@ public interface ReviewService {
 
     List<ReviewDto> readReviewsByStoreName(String storeName);
 
-    ReviewDto updateReview(ReviewDto reviewDto);
+    ReviewDto updateReview(ReviewDto reviewDto, String userEmail);
 
-    void deleteReview(Long reviewId);
+    void deleteReview(Long reviewId, String userEmail);
 
 }

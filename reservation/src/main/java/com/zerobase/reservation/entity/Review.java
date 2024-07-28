@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -21,10 +18,16 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
 
-    private String storeName;
-    private String userName;
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String title;
     private String content;
     private int rating;
+
 }

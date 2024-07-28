@@ -1,5 +1,6 @@
 package com.zerobase.reservation.security;
 
+import com.zerobase.reservation.constant.UserRole;
 import com.zerobase.reservation.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,8 +39,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(TOKEN_PREFIX.length());
             try {
                 email = jwtUtil.extractEmail(jwt);
+                UserRole role = jwtUtil.extractRole(jwt);
             } catch (Exception e) {
-                logger.error("JWT token parsing error: " + e.getMessage());
+                logger.error("토큰 파싱에러 : " + e.getMessage());
             }
         }
 

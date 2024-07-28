@@ -23,12 +23,9 @@ public class AuthController {
      */
     @PostMapping("/create-account")
     public ResponseEntity<?> createAccount(@RequestBody @Valid AuthDto.CreateAccount request) {
-        try {
-            authService.creatAccount(request);
-            return ResponseEntity.ok("회원가입을 축하합니다!");
-        } catch (EmailAlreadyExistException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        authService.creatAccount(request);
+        return ResponseEntity.ok("회원가입을 축하합니다!");
+
     }
 
 
@@ -37,7 +34,7 @@ public class AuthController {
      */
     @PatchMapping("/update-account")
     public ResponseEntity<?> updateAccount(@RequestBody @Valid AuthDto.UpdateAccount request) {
-        authService.updateAccount(request.getEmail(), request);
+        authService.updateAccount(request.getUserEmail(), request);
         return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }
 

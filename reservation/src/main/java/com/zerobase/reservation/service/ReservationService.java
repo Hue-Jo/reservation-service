@@ -21,4 +21,6 @@ public interface ReservationService {
 
     // 방문확인
     String confirmVisit(Long reservationId);
+
+    boolean hasCompletedReservation(Long reservationId);
 }

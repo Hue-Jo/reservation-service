@@ -41,8 +41,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<String> handleInvalidRoleException(InvalidRoleException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(StoreNotExistException.class)
     public ResponseEntity<String> handleStoreNotFoundException(StoreNotExistException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(ReviewNotExistException.class)
+    public ResponseEntity<String> handleReviewNotExistException(ReviewNotExistException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 }
