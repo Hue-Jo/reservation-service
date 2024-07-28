@@ -58,7 +58,7 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public Optional<ReservationDto.Request> confirmReservation(Long reservationId) {
-        return reservationRepository.findById(reservationId)
+        return reservationRepository.findByReservationId(reservationId)
                 .map(reservation -> ReservationDto.Request.builder()
                         .userEmail(reservation.getUser().getEmail())
                         .userName(reservation.getUser().getUserName())
@@ -75,7 +75,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public ResponseEntity<String> updateReservation(Long reservationId, ReservationDto.UpdateDt updateDt) {
 
-        Optional<Reservation> reservationOptional = reservationRepository.findById(reservationId);
+        Optional<Reservation> reservationOptional = reservationRepository.findByReservationId(reservationId);
         if (reservationOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 예약번호가 존재하지 않습니다.");
         }
@@ -112,7 +112,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public String confirmVisit(Long reservationId) {
 
-        Reservation reservation = reservationRepository.findById(reservationId)
+        Reservation reservation = reservationRepository.findByReservationId(reservationId)
                 .orElseThrow(() -> new ReservationNotFoundException("예약번호를 찾을 수 없습니다."));
 
         LocalDateTime now = LocalDateTime.now();

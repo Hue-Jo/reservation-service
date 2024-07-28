@@ -25,3 +25,7 @@ spring:
     jwt:
       secret: bXlOZXdTZWNyZXRLZXkxMjM0NTY3ODkw
       expiration: 3600000
+
+logging:
+  level:
+    org.hibernate: ERROR

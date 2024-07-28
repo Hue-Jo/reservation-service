@@ -71,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<ReviewDto> readReviewsByStoreName(String storeName) {
-        List<Review> reviews = reviewRepository.findByStoreName(storeName);
+        List<Review> reviews = reviewRepository.findByStore_StoreName(storeName);
         return reviews.stream()
                 .map(review -> ReviewDto.builder()
                         .reviewId(review.getReviewId())

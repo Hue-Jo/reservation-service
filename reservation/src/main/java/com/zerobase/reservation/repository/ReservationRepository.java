@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    Optional<Reservation> findById(Long reservationId);
+    Optional<Reservation> findByReservationId(Long reservationId);
 
     boolean existsByReservationDt(LocalDateTime reservationDt);
 
