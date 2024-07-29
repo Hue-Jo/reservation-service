@@ -27,14 +27,14 @@ public class AuthServiceImpl implements AuthService {
      * 회원가입
      */
     @Override
-    public AuthDto.CreateAccount creatAccount(@Valid AuthDto.CreateAccount request) {
+    public void creatAccount(@Valid AuthDto.CreateAccount request) {
 
         if (userRepository.existsByEmail(request.getUserEmail())) {
             throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
         }
 
-        if (request.getPassword() == null || request.getPassword().length() < 8) {
-            throw new InvalidPasswordException("8자리 이상의 유효한 비밀번호를 입력하세요");
+        if (!isValidPassword(request.getPassword())) {
+            throw new InvalidPasswordException("비밀번호는 8자리 이상으로 설정해주세요");
         }
 
         User user = User.builder()
@@ -46,7 +46,10 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
-        return request;
+    }
+    // 최소 8자 이상의 비번
+    private boolean isValidPassword(String password) {
+        return password != null && password.length() >= 8;
     }
 
 
@@ -62,7 +65,10 @@ public class AuthServiceImpl implements AuthService {
 
         // 새 비밀번호로 업데이트
         String newPassword = request.getNewPassword();
-        if (newPassword != null && newPassword.length() >= 8) {
+        if (isValidPassword(newPassword)) {
+            if (passwordEncoder.matches(newPassword, user.getPassword())) {
+                throw new InvalidPasswordException("기존 비밀번호와 동일한 비밀번호로는 변경할 수 없습니다. 새로운 비밀번호를 설정해주세요");
+            }
             user.setPassword(passwordEncoder.encode(newPassword));
         } else {
             throw new InvalidPasswordException("8자리 이상의 유효한 비밀번호를 입력하세요");
@@ -111,10 +117,5 @@ public class AuthServiceImpl implements AuthService {
                 .token(token).message("로그인 되었습니다.")
                 .build();
     }
-
-
-    /**
-     * 로그아웃
-     */
 
 }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface StoreService {
 
-    void enrollStore(StoreDto storeDto);
+    void enrollStore(StoreDto storeDto, String userEmail);
 
     List<StoreDto> searchAllStores();
 

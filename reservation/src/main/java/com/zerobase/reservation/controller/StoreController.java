@@ -4,6 +4,8 @@ import com.zerobase.reservation.dto.StoreDto;
 import com.zerobase.reservation.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,7 +26,10 @@ public class StoreController {
     @PostMapping("/enroll")
     public ResponseEntity<?> enrollStore(@RequestBody @Valid StoreDto storeDto) {
 
-        storeService.enrollStore(storeDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        storeService.enrollStore(storeDto, userEmail);
         return ResponseEntity.ok("매장 등록이 완료되었습니다.");
     }
 
@@ -56,12 +61,10 @@ public class StoreController {
      */
     @GetMapping("/search/{storeName}/detail")
     public ResponseEntity<?> searchStoreDetail(@PathVariable String storeName) {
+
         Optional<StoreDto> storeDto = storeService.searchStoreDetailInfo(storeName);
-        if (storeDto.isPresent()) {
-            return ResponseEntity.ok(storeDto.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return storeDto.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

@@ -6,7 +6,7 @@ import com.zerobase.reservation.entity.Reservation;
 import com.zerobase.reservation.entity.Review;
 import com.zerobase.reservation.entity.Store;
 import com.zerobase.reservation.entity.User;
-import com.zerobase.reservation.exception.ReservationNotFoundException;
+import com.zerobase.reservation.exception.error.ReservationNotFoundException;
 import com.zerobase.reservation.exception.error.InvalidRoleException;
 import com.zerobase.reservation.exception.error.ReviewNotExistException;
 import com.zerobase.reservation.exception.error.UserNotFoundException;
@@ -71,6 +71,10 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<ReviewDto> readReviewsByStoreName(String storeName) {
+
+        if (storeName.trim().isEmpty()) {
+            throw new IllegalArgumentException("매장명을 입력해 주세요.");
+        }
         List<Review> reviews = reviewRepository.findByStore_StoreName(storeName);
         return reviews.stream()
                 .map(review -> ReviewDto.builder()
@@ -134,7 +138,7 @@ public class ReviewServiceImpl implements ReviewService {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
         // 현재 사용자의 역할 확인
-        if (user.getRole() != UserRole.MANAGER && !review.getUser().equals(userEmail)) {
+        if (user.getRole() != UserRole.MANAGER && !review.getUser().equals(user)) {
             throw new InvalidRoleException("리뷰를 삭제할 권한이 없습니다.");
         }
 

@@ -4,7 +4,7 @@ import com.zerobase.reservation.dto.ReservationDto;
 import com.zerobase.reservation.entity.Reservation;
 import com.zerobase.reservation.entity.Store;
 import com.zerobase.reservation.entity.User;
-import com.zerobase.reservation.exception.ReservationNotFoundException;
+import com.zerobase.reservation.exception.error.ReservationNotFoundException;
 import com.zerobase.reservation.exception.error.StoreNotExistException;
 import com.zerobase.reservation.exception.error.UserNotFoundException;
 import com.zerobase.reservation.repository.ReservationRepository;
@@ -31,14 +31,13 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약신청
      */
     @Override
-    public Long requestReservation(ReservationDto.Request reservationDto) {
+    public Long requestReservation(ReservationDto.Request reservationDto, String userEmail) {
 
         User user = userRepository.findByEmail(reservationDto.getUserEmail())
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
 
         Store store = storeRepository.findByStoreName(reservationDto.getStoreName())
                 .orElseThrow(() -> new StoreNotExistException("존재하지 않는 상호명입니다."));
-
 
         Reservation reservation = Reservation.builder()
                 .user(user)
@@ -137,11 +136,5 @@ public class ReservationServiceImpl implements ReservationService {
             return "방문 확인되었습니다. 이용해주셔서 감사합니다.";
         }
     }
-
-
-    public boolean hasCompletedReservation(Long reservationId) {
-        return reservationRepository.findByReservationIdAndVisitYn(reservationId, true).isPresent();
-    }
-
 }
 

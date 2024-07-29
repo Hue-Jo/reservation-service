@@ -5,6 +5,8 @@ import com.zerobase.reservation.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,7 +25,9 @@ public class ReservationController {
      */
     @PostMapping("/request")
     public ResponseEntity<?> requestReservation(@RequestBody @Valid ReservationDto.Request reservationDto) {
-        Long reservationId = reservationService.requestReservation(reservationDto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+        Long reservationId = reservationService.requestReservation(reservationDto, userEmail);
         String message = String.format("예약이 완료되었습니다. 예약번호는 %d입니다." +
                 " 승인이 완료되면 입력해주신 이메일로 확인메일을 보내드립니다.", reservationId);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -36,8 +40,10 @@ public class ReservationController {
      */
     @GetMapping("/confirm/{reservationId}")
     public ResponseEntity<?> confirmReservation(@PathVariable Long reservationId) {
+
         Optional<ReservationDto.Request> reservationInfo = reservationService.confirmReservation(reservationId);
-        return reservationInfo.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return reservationInfo.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 

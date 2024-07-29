@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ReservationService {
 
     // 예약신청
-    Long requestReservation(ReservationDto.Request reservationDto);
+    Long requestReservation(ReservationDto.Request reservationDto, String userEmail);
 
     //예약정보 확인
     Optional<ReservationDto.Request> confirmReservation(Long reservationId);
@@ -21,6 +21,4 @@ public interface ReservationService {
 
     // 방문확인
     String confirmVisit(Long reservationId);
-
-    boolean hasCompletedReservation(Long reservationId);
 }

@@ -33,15 +33,12 @@ public class StoreServiceImpl implements StoreService {
      * 매장등록 (MANAGER ONLY)
      */
     @Override
-    public void enrollStore(StoreDto storeDto) {
+    public void enrollStore(StoreDto storeDto, String userEmail) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserEmail = authentication.getName();
-        User currentUser = userRepository.findByEmail(currentUserEmail)
+        User currentUser = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
 
-
-        log.info("Current User Role: {}", currentUser.getRole()); // 현재 사용자 역할 로그
+        log.info("현재 로그인된 사용자: {}", currentUser.getRole()); // 현재 사용자 역할 로그
 
         if (currentUser.getRole() != UserRole.MANAGER) {
             throw new AccessDeniedException("매장 관리자만 매장을 등록할 수 있습니다.");
@@ -74,7 +71,6 @@ public class StoreServiceImpl implements StoreService {
                         .storeCloseTime(store.getCloseTime())
                         .build())
                 .collect(Collectors.toList());
-
     }
 
 
@@ -105,5 +101,4 @@ public class StoreServiceImpl implements StoreService {
                 .storeCloseTime(store.getCloseTime())
                 .build());
     }
-
 }

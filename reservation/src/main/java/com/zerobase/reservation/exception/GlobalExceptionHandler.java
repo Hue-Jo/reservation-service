@@ -55,4 +55,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleReviewNotExistException(ReviewNotExistException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(ReservationNotFoundException.class)
+    public ResponseEntity<String> handleReservationNotFoundException(ReservationNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
 }

@@ -6,7 +6,7 @@ public interface AuthService{
 
 
     // 회원가입
-    AuthDto.CreateAccount creatAccount(AuthDto.CreateAccount request);
+    void creatAccount(AuthDto.CreateAccount request);
 
 
     // 회원정보 수정 (비밀번호)

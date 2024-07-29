@@ -76,7 +76,7 @@ public class AuthDto {
     @AllArgsConstructor
     @Builder
     public static class LoginRequest {
-        private String UserEmail;
+        private String userEmail;
         private String password;
     }
 
