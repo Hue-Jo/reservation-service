@@ -6,9 +6,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationApplyService {
-    /**
-     * 점주 전용 날짜별 예약정보 확인
-     */
-    List<ReservationDto.Response> getReservationsByStoreAndDate(Long storeId, LocalDate date);
 
+    // 점주 전용 날짜별 예약정보 확인
+    List<ReservationDto.Response> getReservationsByStoreAndDate(Long storeId, String specificDate);
+
+    // 점주 전용 예약승인
 }

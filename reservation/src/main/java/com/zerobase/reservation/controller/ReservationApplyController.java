@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -20,8 +18,6 @@ import java.util.List;
 public class ReservationApplyController {
 
     private final ReservationApplyService reservationApplyService;
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
-
 
     /**
      * 날짜별 예약정보 확인 (MANAGER ONLY)
@@ -31,16 +27,9 @@ public class ReservationApplyController {
             @PathVariable Long storeId,
             @PathVariable String specificDate) {
 
-        // 문자열을 LocalDate로 변환
-        LocalDate date;
-        try {
-            date = LocalDate.parse(specificDate, DATE_FORMATTER);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("날짜를 'yyyy년 MM월 dd일' 형태로 다시 입력해주세요");
-        }
 
         // 예약 조회 서비스 호출
-        List<ReservationDto.Response> reservations = reservationApplyService.getReservationsByStoreAndDate(storeId, date);
+        List<ReservationDto.Response> reservations = reservationApplyService.getReservationsByStoreAndDate(storeId, specificDate);
 
         // 예약이 없는 경우
         if (reservations.isEmpty()) {
