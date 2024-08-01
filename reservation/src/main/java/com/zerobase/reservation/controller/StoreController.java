@@ -24,7 +24,7 @@ public class StoreController {
      * (매니저) 매장등록
      */
     @PostMapping("/enroll")
-    public ResponseEntity<?> enrollStore(@RequestBody @Valid StoreDto storeDto) {
+    public ResponseEntity<String> enrollStore(@RequestBody @Valid StoreDto storeDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();

@@ -11,7 +11,7 @@ public interface ReservationService {
     Long requestReservation(ReservationDto.Request reservationDto, String userEmail);
 
     //예약정보 확인
-    Optional<ReservationDto.Request> confirmReservation(Long reservationId);
+    ResponseEntity<ReservationDto.Request> confirmReservation(Long reservationId);
 
     // 예약정보 수정
     ResponseEntity<String> updateReservation(Long reservationId, ReservationDto.UpdateDt updateDt);

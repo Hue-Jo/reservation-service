@@ -60,4 +60,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleReservationNotFoundException(ReservationNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
+
+    @ExceptionHandler(InvalidWriterException.class)
+    public ResponseEntity<String> handleInvalidWriterException(InvalidWriterException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

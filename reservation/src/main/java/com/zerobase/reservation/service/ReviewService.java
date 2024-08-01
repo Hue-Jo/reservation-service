@@ -15,7 +15,7 @@ public interface ReviewService {
     // 리뷰 수정 (작성자 ONLY)
     ReviewDto updateReview(ReviewDto reviewDto, String userEmail);
 
-    // 리뷰 삭제 (작성지 & 관리자 ONLY)
+    // 리뷰 삭제 (작성자 & 관리자 ONLY)
     void deleteReview(Long reviewId, String userEmail);
 
 }

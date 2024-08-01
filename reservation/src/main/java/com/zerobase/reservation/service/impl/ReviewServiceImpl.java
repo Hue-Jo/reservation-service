@@ -6,6 +6,7 @@ import com.zerobase.reservation.entity.Reservation;
 import com.zerobase.reservation.entity.Review;
 import com.zerobase.reservation.entity.Store;
 import com.zerobase.reservation.entity.User;
+import com.zerobase.reservation.exception.error.InvalidWriterException;
 import com.zerobase.reservation.exception.error.ReservationNotFoundException;
 import com.zerobase.reservation.exception.error.InvalidRoleException;
 import com.zerobase.reservation.exception.error.ReviewNotExistException;
@@ -13,7 +14,6 @@ import com.zerobase.reservation.exception.error.UserNotFoundException;
 import com.zerobase.reservation.repository.ReservationRepository;
 import com.zerobase.reservation.repository.ReviewRepository;
 import com.zerobase.reservation.repository.UserRepository;
-import com.zerobase.reservation.service.ReservationService;
 import com.zerobase.reservation.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
-    private final ReservationService reservationService;
 
     /**
      * 리뷰 작성 (실이용자 ONLY)
@@ -40,7 +39,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> new ReservationNotFoundException("해당 예약이 존재하지 않습니다."));
 
         if (!reservation.isVisitYn()) {
-            throw new IllegalStateException("매장을 실제로 방문/이용한 이용자만 리뷰를 작성할 수 있습니다.");
+            throw new InvalidWriterException("매장을 실제로 방문/이용한 이용자만 리뷰를 작성할 수 있습니다.");
         }
 
         Store store = reservation.getStore();
@@ -137,6 +136,7 @@ public class ReviewServiceImpl implements ReviewService {
         // 현재 사용자의 권한 확인
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("사용자를 찾을 수 없습니다."));
+
         // 현재 사용자의 역할 확인
         if (user.getRole() != UserRole.MANAGER && !review.getUser().equals(user)) {
             throw new InvalidRoleException("리뷰를 삭제할 권한이 없습니다.");
@@ -145,6 +145,5 @@ public class ReviewServiceImpl implements ReviewService {
         // 리뷰 삭제
         reviewRepository.deleteById(reviewId);
     }
-
 
 }

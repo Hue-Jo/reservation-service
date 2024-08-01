@@ -24,7 +24,7 @@ public class ReservationController {
      * 예약신청 _ 예약번호 반환
      */
     @PostMapping("/request")
-    public ResponseEntity<?> requestReservation(@RequestBody @Valid ReservationDto.Request reservationDto) {
+    public ResponseEntity<String> requestReservation(@RequestBody @Valid ReservationDto.Request reservationDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = authentication.getName();
         Long reservationId = reservationService.requestReservation(reservationDto, userEmail);
@@ -39,12 +39,9 @@ public class ReservationController {
      * 예약정보 확인 (예약번호 입력시)
      */
     @GetMapping("/confirm/{reservationId}")
-    public ResponseEntity<?> confirmReservation(@PathVariable Long reservationId) {
+    public ResponseEntity<ReservationDto.Request> confirmReservation(@PathVariable Long reservationId) {
 
-        Optional<ReservationDto.Request> reservationInfo = reservationService.confirmReservation(reservationId);
-        return reservationInfo.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-
+        return reservationService.confirmReservation(reservationId);
     }
 
 

@@ -56,14 +56,20 @@ public class ReservationServiceImpl implements ReservationService {
      * 예약정보 확인 (예약번호 입력)
      */
     @Override
-    public Optional<ReservationDto.Request> confirmReservation(Long reservationId) {
-        return reservationRepository.findByReservationId(reservationId)
-                .map(reservation -> ReservationDto.Request.builder()
-                        .userEmail(reservation.getUser().getEmail())
-                        .userName(reservation.getUser().getUserName())
-                        .storeName(reservation.getStore().getStoreName())
-                        .reservationDt(reservation.getReservationDt())
-                        .build());
+    public ResponseEntity<ReservationDto.Request> confirmReservation(Long reservationId) {
+
+        Optional<Reservation> reservationOptional = reservationRepository.findByReservationId(reservationId);
+        if (reservationOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Reservation reservation = reservationOptional.get();
+        ReservationDto.Request response = ReservationDto.Request.builder()
+                .userEmail(reservation.getUser().getEmail())
+                .userName(reservation.getUser().getUserName())
+                .storeName(reservation.getStore().getStoreName())
+                .reservationDt(reservation.getReservationDt())
+                .build();
+        return ResponseEntity.ok(response);
 
     }
 
@@ -105,6 +111,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 방문확인
+     * 예약시간 10분 전부터만 방문확인 가능
      * 10분 이상 지각시, 30분 후 이용가능
      * 미뤄진 예약 시간에 이미 예약자가 있는 경우, 예약을 새롭게 해야한다는 메시지 반환
      */
@@ -116,8 +123,12 @@ public class ReservationServiceImpl implements ReservationService {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime reservationDt = reservation.getReservationDt();
+        LocalDateTime beforeReservation = reservationDt.minusMinutes(11);
 
-        if (now.isAfter(reservationDt.plusMinutes(10))) { // 10분 지각 시
+        if (now.isBefore(beforeReservation)) {
+            return "예약시간 10분 전부터 방문 확인이 가능합니다.";
+
+        } else if (now.isAfter(reservationDt.plusMinutes(10))) { // 10분 지각 시
             LocalDateTime newReservationDt = reservationDt.plusMinutes(30); // 30분 뒤로 연기
 
             // 미룬 시간에 다른 예약이 있는지 확인

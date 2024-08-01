@@ -22,7 +22,7 @@ public class AuthController {
      * 회원가입
      */
     @PostMapping("/create-account")
-    public ResponseEntity<?> createAccount(@RequestBody @Valid AuthDto.CreateAccount request) {
+    public ResponseEntity<String> createAccount(@RequestBody @Valid AuthDto.CreateAccount request) {
         authService.creatAccount(request);
         return ResponseEntity.ok("회원가입을 축하합니다!");
 
@@ -33,7 +33,7 @@ public class AuthController {
      * 회원정보 수정 (비밀번호)
      */
     @PatchMapping("/update-account")
-    public ResponseEntity<?> updateAccount(@RequestBody @Valid AuthDto.UpdateAccount request) {
+    public ResponseEntity<String> updateAccount(@RequestBody @Valid AuthDto.UpdateAccount request) {
         authService.updateAccount(request.getUserEmail(), request);
         return ResponseEntity.ok("비밀번호가 성공적으로 변경되었습니다.");
     }

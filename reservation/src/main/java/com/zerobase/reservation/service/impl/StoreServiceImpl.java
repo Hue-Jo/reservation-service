@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,10 +44,10 @@ public class StoreServiceImpl implements StoreService {
 
         Store store = Store.builder()
                 .storeName(storeDto.getStoreName())
-                .location(storeDto.getStoreLocation())
-                .phoneNum(storeDto.getStorePhoneNum())
-                .openTime(storeDto.getStoreOpenTime())
-                .closeTime(storeDto.getStoreCloseTime())
+                .location(storeDto.getLocation())
+                .phoneNum(storeDto.getPhoneNum())
+                .openTime(storeDto.getOpenTime())
+                .closeTime(storeDto.getCloseTime())
                 .build();
 
         storeRepository.save(store);
@@ -65,10 +63,10 @@ public class StoreServiceImpl implements StoreService {
         return stores.stream()
                 .map(store -> StoreDto.builder()
                         .storeName(store.getStoreName())
-                        .storeLocation(store.getLocation())
-                        .storePhoneNum(store.getPhoneNum())
-                        .storeOpenTime(store.getOpenTime())
-                        .storeCloseTime(store.getCloseTime())
+                        .location(store.getLocation())
+                        .phoneNum(store.getPhoneNum())
+                        .openTime(store.getOpenTime())
+                        .closeTime(store.getCloseTime())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -95,10 +93,10 @@ public class StoreServiceImpl implements StoreService {
         Optional<Store> storeDetail = storeRepository.findByStoreName(storeName);
         return storeDetail.map(store -> StoreDto.builder()
                 .storeName(store.getStoreName())
-                .storeLocation(store.getLocation())
-                .storePhoneNum(store.getPhoneNum())
-                .storeOpenTime(store.getOpenTime())
-                .storeCloseTime(store.getCloseTime())
+                .location(store.getLocation())
+                .phoneNum(store.getPhoneNum())
+                .openTime(store.getOpenTime())
+                .closeTime(store.getCloseTime())
                 .build());
     }
 }
