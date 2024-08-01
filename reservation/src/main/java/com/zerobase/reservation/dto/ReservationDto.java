@@ -1,10 +1,7 @@
 package com.zerobase.reservation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -47,4 +44,15 @@ public class ReservationDto {
     }
 
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Response {
+
+        private String userEmail;   // 사용자 이메일
+        private String userName;    // 사용자 이름
+        @JsonFormat(pattern = "yyyy년 MM월 dd일, HH시 mm분")
+        private LocalDateTime reservationDt;  // 예약 일자 및 시간
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -73,14 +74,6 @@ public class ReservationController {
     public ResponseEntity<String> visitConfirm(@PathVariable Long reservationId) {
         String message = reservationService.confirmVisit(reservationId);
         return ResponseEntity.ok(message);
-
-    }
-
-    /**
-     * 날짜별 예약정보 확인 (MANAGER ONLY)
-     */
-    @GetMapping("/check-schedule/{date}")
-    public void checkReservationSchedule(@PathVariable LocalDate date) {
 
     }
 }

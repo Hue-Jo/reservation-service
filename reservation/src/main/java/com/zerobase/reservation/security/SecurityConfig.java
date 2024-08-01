@@ -49,8 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // 요청 권한 설정
         http.authorizeRequests()
                 .antMatchers("/authority/**").permitAll()
-                .antMatchers("/store/enroll").hasRole("MANAGER") // 매장등록은 MANAGER만
-                .antMatchers("/reservation/**").hasRole("USER")  // 예약관련은 USER만
+                .antMatchers("/store/enroll").hasAuthority("MANAGER") // 점주 전용 매장 등록
+                .antMatchers("/reservation/**").hasAuthority("USER") // 이용자 전용 예약 신청, 확인, 수정, 삭제
+                .antMatchers("/reservation-apply/**").hasAuthority("MANAGER") // 점주 전용 날짜별 예약정보 확인
                 .anyRequest().permitAll(); // 나머지는 허용
 
         // Jwt 필터 등록
