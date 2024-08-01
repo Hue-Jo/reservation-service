@@ -1,5 +1,6 @@
 package com.zerobase.reservation.service.impl;
 
+import com.zerobase.reservation.constant.ReservationStatus;
 import com.zerobase.reservation.dto.ReservationDto;
 import com.zerobase.reservation.entity.Reservation;
 import com.zerobase.reservation.entity.Store;
@@ -45,6 +46,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .reservationDt(reservationDto.getReservationDt())
                 .visitYn(false)
                 .delayYn(false)
+                .status(ReservationStatus.PENDING)
                 .build();
 
         return reservationRepository.save(reservation)
@@ -63,6 +65,7 @@ public class ReservationServiceImpl implements ReservationService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Reservation reservation = reservationOptional.get();
+
         ReservationDto.Request response = ReservationDto.Request.builder()
                 .userEmail(reservation.getUser().getEmail())
                 .userName(reservation.getUser().getUserName())

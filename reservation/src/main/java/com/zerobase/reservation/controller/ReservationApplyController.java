@@ -5,10 +5,7 @@ import com.zerobase.reservation.service.ReservationApplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,7 +26,7 @@ public class ReservationApplyController {
 
 
         // 예약 조회 서비스 호출
-        List<ReservationDto.Response> reservations = reservationApplyService.getReservationsByStoreAndDate(storeId, specificDate);
+        List<ReservationDto.Response> reservations = reservationApplyService.getReservationByDate(storeId, specificDate);
 
         // 예약이 없는 경우
         if (reservations.isEmpty()) {
@@ -38,4 +35,19 @@ public class ReservationApplyController {
         // 예약이 있는 경우, 예약 리스트 반환
         return ResponseEntity.ok(reservations);
     }
+
+    /**
+     *
+     * @param reservationId
+     * @param approve 예약 승인여부 (true: 승인, false: 거절)
+     * @return 예약 처리 결과
+     */
+    @PutMapping("/reservation/{reservationId}/process")
+    public ResponseEntity<String> processReservation(
+            @PathVariable Long reservationId,
+            @RequestParam boolean approve) {
+
+        return reservationApplyService.processReservation(reservationId, approve);
+    }
+
 }

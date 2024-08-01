@@ -1,14 +1,14 @@
 package com.zerobase.reservation.service;
 
 import com.zerobase.reservation.dto.ReservationDto;
+import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ReservationApplyService {
 
     // 점주 전용 날짜별 예약정보 확인
-    List<ReservationDto.Response> getReservationsByStoreAndDate(Long storeId, String specificDate);
+    List<ReservationDto.Response> getReservationByDate(Long storeId, String specificDate);
 
-    // 점주 전용 예약승인
-}
+    ResponseEntity<String> processReservation(Long reservationId, boolean approve);
+  }

@@ -1,5 +1,6 @@
 package com.zerobase.reservation.entity;
 
+import com.zerobase.reservation.constant.ReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,4 +33,7 @@ public class Reservation {
     private boolean visitYn;
     private boolean delayYn;
     private LocalDateTime newReservationDt;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
 }
