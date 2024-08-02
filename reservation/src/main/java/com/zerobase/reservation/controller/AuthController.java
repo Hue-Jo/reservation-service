@@ -1,7 +1,6 @@
 package com.zerobase.reservation.controller;
 
 import com.zerobase.reservation.dto.AuthDto;
-import com.zerobase.reservation.exception.error.EmailAlreadyExistException;
 import com.zerobase.reservation.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,7 @@ public class AuthController {
      */
     @PostMapping("/create-account")
     public ResponseEntity<String> createAccount(@RequestBody @Valid AuthDto.CreateAccount request) {
-        authService.creatAccount(request);
+        authService.createAccount(request);
         return ResponseEntity.ok("회원가입을 축하합니다!");
 
     }

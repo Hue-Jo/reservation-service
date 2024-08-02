@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
      * 회원가입
      */
     @Override
-    public void creatAccount(@Valid AuthDto.CreateAccount request) {
+    public void createAccount(@Valid AuthDto.CreateAccount request) {
 
         if (userRepository.existsByEmail(request.getUserEmail())) {
             throw new EmailAlreadyExistException("이미 존재하는 이메일입니다.");
@@ -47,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
     }
+
     // 최소 8자 이상의 비번
     private boolean isValidPassword(String password) {
         return password != null && password.length() >= 8;

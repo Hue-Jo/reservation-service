@@ -63,7 +63,7 @@ public class ReservationApplyServiceImpl implements ReservationApplyService {
      * 일요일의 경우 예약 거절, 그외에는 승인
      */
     @Override
-    public ResponseEntity<String> processReservation(Long reservationId, boolean approve) {
+    public ResponseEntity<String> processReservation(Long reservationId) {
 
         Optional<Reservation> reservationOptional = reservationRepository.findByReservationId(reservationId);
         if (reservationOptional.isEmpty()) {
@@ -71,19 +71,18 @@ public class ReservationApplyServiceImpl implements ReservationApplyService {
         }
 
         Reservation reservation = reservationOptional.get();
-        LocalDateTime reservationDateTime = reservation.getReservationDt();
-        LocalDate reservationDate = reservationDateTime.toLocalDate();
+        LocalDate reservationDate = reservation.getReservationDt().toLocalDate();
 
         // 일요일 예약 거절
         if (reservationDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
             reservation.setStatus(ReservationStatus.REJECTED);  // 일요일 예약은 거절 상태로 변경
             reservationRepository.save(reservation);
-            return ResponseEntity.ok("일요일 예약은 불가합니다. 다른 요일로 다시 예약해주세요.");
+            return ResponseEntity.ok("일요일 예약불가. 예약 거절 처리");
         }
 
         // 일요일이 아닌 경우 예약 승인
         reservation.setStatus(ReservationStatus.APPROVED);
         reservationRepository.save(reservation);
-        return ResponseEntity.ok("예약이 승인되었습니다.");
+        return ResponseEntity.ok("예약을 승인했습니다.");
     }
 }

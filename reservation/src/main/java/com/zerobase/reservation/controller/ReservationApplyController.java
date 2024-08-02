@@ -36,18 +36,14 @@ public class ReservationApplyController {
         return ResponseEntity.ok(reservations);
     }
 
+
     /**
-     *
-     * @param reservationId
-     * @param approve 예약 승인여부 (true: 승인, false: 거절)
-     * @return 예약 처리 결과
+     * 예약 승인/거절
      */
     @PutMapping("/reservation/{reservationId}/process")
-    public ResponseEntity<String> processReservation(
-            @PathVariable Long reservationId,
-            @RequestParam boolean approve) {
+    public ResponseEntity<String> processReservation(@PathVariable Long reservationId) {
 
-        return reservationApplyService.processReservation(reservationId, approve);
+        return reservationApplyService.processReservation(reservationId);
     }
 
 }

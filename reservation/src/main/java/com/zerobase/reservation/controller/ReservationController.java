@@ -10,9 +10,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/reservation")
@@ -31,8 +28,7 @@ public class ReservationController {
         Long reservationId = reservationService.requestReservation(reservationDto, userEmail);
         String message = String.format("예약이 완료되었습니다. 예약번호는 %d입니다." +
                 " 승인이 완료되면 입력해주신 이메일로 확인메일을 보내드립니다.", reservationId);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
 

@@ -26,7 +26,6 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final UserRepository userRepository;
 
-
     /**
      * 매장등록 (MANAGER ONLY)
      */
@@ -59,15 +58,9 @@ public class StoreServiceImpl implements StoreService {
      */
     @Override
     public List<StoreDto> searchAllStores() {
-        List<Store> stores = storeRepository.findAll();
-        return stores.stream()
-                .map(store -> StoreDto.builder()
-                        .storeName(store.getStoreName())
-                        .location(store.getLocation())
-                        .phoneNum(store.getPhoneNum())
-                        .openTime(store.getOpenTime())
-                        .closeTime(store.getCloseTime())
-                        .build())
+        return storeRepository.findAll()
+                .stream()
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
@@ -77,9 +70,8 @@ public class StoreServiceImpl implements StoreService {
      */
     @Override
     public List<String> searchStoreSortedByName() {
-        List<Store> stores = storeRepository.findAll(
-                Sort.by(Sort.Order.asc("storeName")));
-        return stores.stream()
+        return storeRepository.findAll(Sort.by(Sort.Order.asc("storeName")))
+                .stream()
                 .map(Store::getStoreName)
                 .collect(Collectors.toList());
     }
@@ -90,13 +82,18 @@ public class StoreServiceImpl implements StoreService {
      */
     @Override
     public Optional<StoreDto> searchStoreDetailInfo(String storeName) {
-        Optional<Store> storeDetail = storeRepository.findByStoreName(storeName);
-        return storeDetail.map(store -> StoreDto.builder()
+        return storeRepository.findByStoreName(storeName)
+                .map(this::convertToDto);
+    }
+
+
+    private StoreDto convertToDto(Store store) {
+        return StoreDto.builder()
                 .storeName(store.getStoreName())
                 .location(store.getLocation())
                 .phoneNum(store.getPhoneNum())
                 .openTime(store.getOpenTime())
                 .closeTime(store.getCloseTime())
-                .build());
+                .build();
     }
 }

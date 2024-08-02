@@ -6,11 +6,7 @@ import com.zerobase.reservation.entity.Reservation;
 import com.zerobase.reservation.entity.Review;
 import com.zerobase.reservation.entity.Store;
 import com.zerobase.reservation.entity.User;
-import com.zerobase.reservation.exception.error.InvalidWriterException;
-import com.zerobase.reservation.exception.error.ReservationNotFoundException;
-import com.zerobase.reservation.exception.error.InvalidRoleException;
-import com.zerobase.reservation.exception.error.ReviewNotExistException;
-import com.zerobase.reservation.exception.error.UserNotFoundException;
+import com.zerobase.reservation.exception.error.*;
 import com.zerobase.reservation.repository.ReservationRepository;
 import com.zerobase.reservation.repository.ReviewRepository;
 import com.zerobase.reservation.repository.UserRepository;
@@ -71,7 +67,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<ReviewDto> readReviewsByStoreName(String storeName) {
 
-        if (storeName.trim().isEmpty()) {
+        if (storeName.isEmpty()) {
             throw new IllegalArgumentException("매장명을 입력해 주세요.");
         }
         List<Review> reviews = reviewRepository.findByStore_StoreName(storeName);

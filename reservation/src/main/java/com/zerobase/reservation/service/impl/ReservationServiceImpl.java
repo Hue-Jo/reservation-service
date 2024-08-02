@@ -34,7 +34,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Long requestReservation(ReservationDto.Request reservationDto, String userEmail) {
 
-        User user = userRepository.findByEmail(reservationDto.getUserEmail())
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 회원입니다."));
 
         Store store = storeRepository.findByStoreName(reservationDto.getStoreName())
@@ -87,6 +87,7 @@ public class ReservationServiceImpl implements ReservationService {
         if (reservationOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 예약번호가 존재하지 않습니다.");
         }
+        
         Reservation reservation = reservationOptional.get();
         LocalDateTime newDateTime = updateDt.getUpdatedDt();
         reservation.setReservationDt(newDateTime);
