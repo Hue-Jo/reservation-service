@@ -59,6 +59,7 @@ public class ReservationApplyServiceImpl implements ReservationApplyService {
                 .map(reservation -> ReservationDto.Response.builder()
                         .userEmail(reservation.getUser().getEmail())
                         .userName(reservation.getUser().getUserName())
+                        .phoneNum(reservation.getUser().getPhoneNum())
                         .reservationDt(reservation.getReservationDt())
                         .build())
                 .collect(Collectors.toList());

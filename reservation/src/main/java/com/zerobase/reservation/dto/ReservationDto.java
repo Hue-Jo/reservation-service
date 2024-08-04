@@ -27,6 +27,9 @@ public class ReservationDto {
         @NotBlank(message = "예약자명은 필수 작성항목입니다.")
         private String userName;    // 예약자 이름
 
+        @NotBlank(message = "전화번호는 필수 작성항목입니다.")
+        private String phoneNum; // 전화번호
+
         @NotNull(message = "예약하고자 하는 날짜를 작성하십시오")
         @JsonFormat(pattern = "yyyy년 MM월 dd일, HH시 mm분")
         private LocalDateTime reservationDt;  // 예약 일자
@@ -51,8 +54,9 @@ public class ReservationDto {
     @Builder
     public static class Response {
 
-        private String userEmail;   // 사용자 이메일
-        private String userName;    // 사용자 이름
+        private String userEmail;   // 예약자 이메일
+        private String userName;    // 예약자 이름
+        private String phoneNum;    // 예약자 전화번호
         @JsonFormat(pattern = "yyyy년 MM월 dd일, HH시 mm분")
         private LocalDateTime reservationDt;  // 예약 일자 및 시간
         private ReservationStatus status;

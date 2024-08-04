@@ -71,6 +71,7 @@ public class ReservationServiceImpl implements ReservationService {
         ReservationDto.Request response = ReservationDto.Request.builder()
                 .userEmail(reservation.getUser().getEmail())
                 .userName(reservation.getUser().getUserName())
+                .phoneNum(reservation.getUser().getPhoneNum())
                 .storeName(reservation.getStore().getStoreName())
                 .reservationDt(reservation.getReservationDt())
                 .build();
