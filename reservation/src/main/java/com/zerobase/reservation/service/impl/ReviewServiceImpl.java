@@ -27,6 +27,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     /**
      * 리뷰 작성 (실이용자 ONLY)
+     * 리뷰번호, 매장명, 리뷰작성자, 제목, 내용(20자 이상), 별점(1-5점) 반환
      */
     @Override
     public ReviewDto writeReview(ReviewDto reviewDto) {
@@ -62,7 +63,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     /**
-     * 리뷰 확인
+     * 리뷰 확인 (매장별)
      */
     @Override
     public List<ReviewDto> readReviewsByStoreName(String storeName) {
@@ -120,7 +121,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     /**
-     * 리뷰삭제 (실이용자 & MANAGER ONLY)
+     * 리뷰삭제 (실이용자 & 매장관리자 ONLY)
      */
     @Override
     public void deleteReview(Long reviewId, String userEmail) {

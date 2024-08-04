@@ -19,7 +19,8 @@ public class ReservationController {
     private final ReservationService reservationService;
 
     /**
-     * 예약신청 _ 예약번호 반환
+     * 예약신청
+     * 예약번호 반환
      */
     @PostMapping("/request")
     public ResponseEntity<String> requestReservation(@RequestBody @Valid ReservationDto.Request reservationDto) {
@@ -34,6 +35,7 @@ public class ReservationController {
 
     /**
      * 예약정보 확인 (예약번호 입력시)
+     * 예약시 입력한 정보 반환
      */
     @GetMapping("/confirm/{reservationId}")
     public ResponseEntity<ReservationDto.Request> confirmReservation(@PathVariable Long reservationId) {
@@ -43,7 +45,7 @@ public class ReservationController {
 
 
     /**
-     * 예약시간 수정 (예약번호 입력시)
+     * 예약시간 수정 (예약번호 입력)
      */
     @PatchMapping("/update/{reservationId}")
     public ResponseEntity<String> updateReservation(@PathVariable Long reservationId,
@@ -53,7 +55,7 @@ public class ReservationController {
 
 
     /**
-     * 예약취소 (예약번호 입력시)
+     * 예약취소 (예약번호 입력)
      */
     @DeleteMapping("/cancel/{reservationId}")
     public ResponseEntity<String> cancelReservation(@PathVariable Long reservationId) {
@@ -62,7 +64,8 @@ public class ReservationController {
 
 
     /**
-     * 방문확인
+     * 방문확인 (예약번호 입력)
+     * 예약시간 10분 전부터만 방문확인 가능
      * 10분 이상 지각시, 30분 후 이용가능
      * 미뤄진 예약 시간에 이미 예약자가 있는 경우, 예약을 새롭게 해야한다는 메시지 반환
      */

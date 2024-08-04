@@ -1,7 +1,6 @@
 package com.zerobase.reservation.security;
 
 
-import com.zerobase.reservation.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

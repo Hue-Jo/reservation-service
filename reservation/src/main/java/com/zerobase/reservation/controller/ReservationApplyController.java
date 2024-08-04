@@ -17,13 +17,13 @@ public class ReservationApplyController {
     private final ReservationApplyService reservationApplyService;
 
     /**
-     * 날짜별 예약정보 확인 (MANAGER ONLY)
+     * 날짜별 예약정보 확인 (매장관리자 ONLY)
+     * 매장 ID, 특정(범위) 날짜 입력 => 특정(범위) 날짜의 예약 리스트 반환
      */
     @GetMapping("/store/{storeId}/date/{specificDate}")
     public ResponseEntity<?> getReservationsByStoreAndDate(
             @PathVariable Long storeId,
             @PathVariable String specificDate) {
-
 
         // 예약 조회 서비스 호출
         List<ReservationDto.Response> reservations = reservationApplyService.getReservationByDate(storeId, specificDate);
@@ -38,7 +38,8 @@ public class ReservationApplyController {
 
 
     /**
-     * 예약 승인/거절
+     * 예약 승인/거절 (매장관리자 ONLY)
+     * 일요일 예약자의 예약 거절 처리
      */
     @PutMapping("/reservation/{reservationId}/process")
     public ResponseEntity<String> processReservation(@PathVariable Long reservationId) {

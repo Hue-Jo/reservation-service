@@ -30,6 +30,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 예약신청
+     * 예약번호 반환
      */
     @Override
     public Long requestReservation(ReservationDto.Request reservationDto, String userEmail) {
@@ -56,6 +57,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 예약정보 확인 (예약번호 입력)
+     * 예약시 입력한 정보 반환
      */
     @Override
     public ResponseEntity<ReservationDto.Request> confirmReservation(Long reservationId) {
@@ -114,7 +116,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 
     /**
-     * 방문확인
+     * 방문확인 (예약번호 입력)
      * 예약시간 10분 전부터만 방문확인 가능
      * 10분 이상 지각시, 30분 후 이용가능
      * 미뤄진 예약 시간에 이미 예약자가 있는 경우, 예약을 새롭게 해야한다는 메시지 반환

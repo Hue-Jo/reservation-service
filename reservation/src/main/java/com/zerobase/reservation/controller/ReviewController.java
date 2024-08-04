@@ -20,7 +20,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     /**
-     * 리뷰 작성 (실고객 only)
+     * 리뷰 작성 (실이용자 ONLY)
+     * 리뷰번호, 매장명, 리뷰작성자, 제목, 내용, 별점(1-5점) 반환
      */
     @PostMapping("/wrtie")
     public ResponseEntity<ReviewDto> writeReview(@RequestBody ReviewDto reviewDto) {
@@ -42,7 +43,8 @@ public class ReviewController {
 
 
     /**
-     * 리뷰 수정 (실고객 only)
+     * 리뷰 수정 (실고객 ONLY)
+     * 제목, 내용, 별점만 수정 가능
      */
     @PatchMapping("/edit")
     public ResponseEntity<ReviewDto> updateReview(@RequestBody ReviewDto reviewDto,
@@ -60,7 +62,7 @@ public class ReviewController {
 
 
     /**
-     * 리뷰 삭제 (실고객 & 매니저 only)
+     * 리뷰 삭제 (실이용자 & 매장관리자 ONLY)
      */
     @DeleteMapping("/delete/{reviewId}")
     public ResponseEntity<String> deleteReview(@PathVariable Long reviewId, @RequestHeader("user-email") String userEmail) {
@@ -74,6 +76,5 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("작성자와 관리자만 삭제가 가능합니다.");
         }
     }
-
 
 }

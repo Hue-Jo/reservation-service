@@ -19,6 +19,7 @@ public class AuthController {
 
     /**
      * 회원가입
+     * 이메일, 이름, 연락처, 비밀번호, 이용자/관리자 여부
      */
     @PostMapping("/create-account")
     public ResponseEntity<String> createAccount(@RequestBody @Valid AuthDto.CreateAccount request) {
@@ -30,6 +31,7 @@ public class AuthController {
 
     /**
      * 회원정보 수정 (비밀번호)
+     * 이메일 입력 후 비밀번호 변경
      */
     @PatchMapping("/update-account")
     public ResponseEntity<String> updateAccount(@RequestBody @Valid AuthDto.UpdateAccount request) {
@@ -39,7 +41,8 @@ public class AuthController {
 
 
     /**
-     * 회원탈퇴
+     * 회원탈퇴 (계정 삭제)
+     * 이메일 입력 후 탈퇴
      */
     @DeleteMapping("/delete-account")
     public ResponseEntity<String> deleteAccount(@RequestBody @Valid AuthDto.DeleteAccount request) {
@@ -50,6 +53,7 @@ public class AuthController {
 
     /**
      * 로그인
+     * 이메일 & 비밀번호 입력
      */
     @PostMapping("/login")
     public ResponseEntity<AuthDto.LoginResponse> login(@RequestBody AuthDto.LoginRequest request) {

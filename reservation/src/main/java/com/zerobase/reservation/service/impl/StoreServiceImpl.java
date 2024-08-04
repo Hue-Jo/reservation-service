@@ -27,7 +27,8 @@ public class StoreServiceImpl implements StoreService {
     private final UserRepository userRepository;
 
     /**
-     * 매장등록 (MANAGER ONLY)
+     * 매장등록 (매장관리자 ONLY)
+     * 상호명, 위치, 전화번호, 오픈시간, 마감시간
      */
     @Override
     public void enrollStore(StoreDto storeDto, String userEmail) {
@@ -54,7 +55,7 @@ public class StoreServiceImpl implements StoreService {
 
 
     /**
-     * 전체 매장 검색
+     * 전체 매장 리스트 검색
      */
     @Override
     public List<StoreDto> searchAllStores() {
@@ -66,7 +67,7 @@ public class StoreServiceImpl implements StoreService {
 
 
     /**
-     * 매장 이름 오름차순 검색
+     * 전체매장 이름 오름차순 검색
      */
     @Override
     public List<String> searchStoreSortedByName() {
@@ -78,7 +79,7 @@ public class StoreServiceImpl implements StoreService {
 
 
     /**
-     * 매장 상세정보 검색
+     * 특정매장 상세정보 검색
      */
     @Override
     public Optional<StoreDto> searchStoreDetailInfo(String storeName) {

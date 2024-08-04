@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     /**
-     * 계정 삭제
+     * 회원탈퇴 (계정 삭제)
      */
     @Override
     public void deleteAccount(AuthDto.DeleteAccount request) {

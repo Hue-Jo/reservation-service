@@ -29,6 +29,11 @@ public class ReservationApplyServiceImpl implements ReservationApplyService {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+
+    /**
+     * 날짜별 예약정보 확인 (매장관리자 ONLY)
+     * 매장 ID, 특정(범위) 날짜 입력 => 특정(범위) 날짜의 예약 리스트 반환
+     */
     @Override
     public List<ReservationDto.Response> getReservationByDate(Long storeId, String specificDate) {
         if (!storeRepository.existsById(storeId)) {
@@ -59,8 +64,10 @@ public class ReservationApplyServiceImpl implements ReservationApplyService {
                 .collect(Collectors.toList());
     }
 
+
     /**
-     * 일요일의 경우 예약 거절, 그외에는 승인
+     * 예약 승인/거절 (매장관리자 ONLY)
+     * 일요일 예약자의 예약 거절 처리
      */
     @Override
     public ResponseEntity<String> processReservation(Long reservationId) {

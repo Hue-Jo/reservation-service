@@ -21,7 +21,8 @@ public class StoreController {
 
 
     /**
-     * (매니저) 매장등록
+     * 매장등록 (매장관리자 ONLY)
+     * 상호명, 위치, 전화번호, 오픈시간, 마감시간
      */
     @PostMapping("/enroll")
     public ResponseEntity<String> enrollStore(@RequestBody @Valid StoreDto storeDto) {
@@ -35,7 +36,7 @@ public class StoreController {
 
 
     /**
-     * 전체매장 검색
+     * 전체 매장 리스트 검색
      */
     @GetMapping("/search/all")
     public ResponseEntity<List<StoreDto>> searchAllStores() {
@@ -57,7 +58,7 @@ public class StoreController {
 
 
     /**
-     * 매장 상세 검색
+     * 특정매장 상세정보 검색
      */
     @GetMapping("/search/{storeName}/detail")
     public ResponseEntity<?> searchStoreDetail(@PathVariable String storeName) {
